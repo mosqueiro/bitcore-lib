@@ -12,8 +12,8 @@ var Address = bitcore.Address;
 var Script = bitcore.Script;
 var Networks = bitcore.Networks;
 
-var validbase58 = require('./data/bitcoind/base58_keys_valid.json');
-var invalidbase58 = require('./data/bitcoind/base58_keys_invalid.json');
+var validbase58 = require('./data/smartcashd/base58_keys_valid.json');
+var invalidbase58 = require('./data/smartcashd/base58_keys_invalid.json');
 
 describe('Address', function() {
 
@@ -39,7 +39,7 @@ describe('Address', function() {
     }).should.throw('Third argument must be "pubkeyhash" or "scripthash"');
   });
 
-  describe('bitcoind compliance', function() {
+  describe('smartcashd compliance', function() {
     validbase58.map(function(d) {
       if (!d[2].isPrivkey) {
         it('should describe address ' + d[0] + ' as valid', function() {
@@ -248,6 +248,12 @@ describe('Address', function() {
 
     it('should make an address using a non-string network', function() {
       Address.fromString(str, Networks.livenet).toString().should.equal(str);
+    });
+
+    it('should throw with bad network param', function() {
+      (function(){
+        Address.fromString(str, 'somenet');
+      }).should.throw('Unknown network');
     });
 
     it('should error because of unrecognized data format', function() {
